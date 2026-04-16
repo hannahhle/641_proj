@@ -60,11 +60,13 @@ foreach yr of numlist 2005(1)2009 {
 	save "${temp_path}/shs`yr'"
 }
 
-use "${data_path}/raw/shs-62M0004-E-2005_F1.dta", clear
+use "${temp_path}/shs2005.dta", clear
 
 foreach yr of numlist 2006(1)2009 {
 	append using "${temp_path}/shs`yr'.dta"
 	erase "${temp_path}/shs`yr'.dta"
 }
+
+erase "${temp_path}/shs2005.dta"
 
 save "${data_path}/clean/shs_all.dta", replace
