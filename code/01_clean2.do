@@ -110,9 +110,10 @@ label values prov provlbl
 destring expenditure consump wfelec, replace
 save "${temp_path}/shs2010", replace
 
-use"${data_path}/clean/shs_all.dta", clear
+use"${data_path}/clean/shs_all_quint.dta", clear
 
 append using "${temp_path}/shs2010.dta"
 erase "${temp_path}/shs2010.dta"
 
+sort prov inc_quint year
 save "${data_path}/shs_all_final.dta", replace

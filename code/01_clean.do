@@ -70,3 +70,26 @@ foreach yr of numlist 2006(1)2009 {
 erase "${temp_path}/shs2005.dta"
 
 save "${data_path}/clean/shs_all.dta", replace
+
+drop if prov == 0
+drop if prov == .
+drop if prov == .a
+
+{
+levelsof prov, local(provs)
+
+gen inc_quint = .
+
+foreach p of local provs {
+    xtile temp = income if prov == `p', nq(5)
+    replace inc_quint = temp if prov == `p'
+    drop temp
+}
+
+collapse (mean) income wfelec nat_gas other_fuel consump expenditure ///
+	[aw=weight], by(inc_quint prov year)
+ 
+sort prov inc_quint year
+}
+
+save "${data_path}/clean/shs_all_quint.dta", replace
