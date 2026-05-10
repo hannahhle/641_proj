@@ -1,28 +1,3 @@
-clear all
-
-use "${data_path}/clean/shs_all.dta", clear
-drop if prov == 0
-drop if prov == .
-drop if prov == .a
-drop urb_type
-drop if urb_size == 0
-
-{
-levelsof prov, local(provs)
-
-gen inc_quint = .
-
-foreach p of local provs {
-    xtile temp = income if prov == `p', nq(5)
-    replace inc_quint = temp if prov == `p'
-    drop temp
-}
-
-collapse (mean) income wfelec nat_gas other_fuel consump expenditure ///
-	[aw=weight], by(inc_quint prov urb_size year)
- 
-sort prov year inc_quint
-}
 
 /*
 {
