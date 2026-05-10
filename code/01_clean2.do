@@ -107,7 +107,7 @@ label define provlbl ///
 59 "British Columbia"
 
 label values prov provlbl
-destring expenditure consump wfelec, replace
+destring expenditure consump wfelec N_households, replace
 save "${temp_path}/shs2010", replace
 
 use"${data_path}/clean/shs_all_quint.dta", clear

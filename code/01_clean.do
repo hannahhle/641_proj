@@ -75,7 +75,6 @@ drop if prov == 0
 drop if prov == .
 drop if prov == .a
 
-{
 levelsof prov, local(provs)
 
 gen inc_quint = .
@@ -86,10 +85,20 @@ foreach p of local provs {
     drop temp
 }
 
+preserve
 collapse (mean) income wfelec nat_gas other_fuel consump expenditure ///
-	[aw=weight], by(inc_quint prov year)
- 
+         (sum) N_households=weight ///
+         [aw=weight], by(prov year)
+gen inc_quint = 0
+tempfile totals
+save `totals'
+restore
+
+collapse (mean) income wfelec nat_gas other_fuel consump expenditure ///
+         (sum) N_households=weight ///
+         [aw=weight], by(inc_quint prov year)
+
+append using `totals'
 sort prov inc_quint year
-}
 
 save "${data_path}/clean/shs_all_quint.dta", replace
